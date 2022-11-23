@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuanlrc.dao.se_business_opportunityDao">
+    <resultMap id="se_business_opportunityMap" type="com.yuanlrc.entity.se_business_opportunity">
+        <result property="id" column="id"/>
+        <result property="customer_id" column="customer_id"/>
+        <result property="bo_name" column="bo_name"/>
+        <result property="bo_date" column="bo_date"/>
+        <result property="bo_status" column="bo_status"/>
+        <result property="bo_follow_status" column="bo_follow_status"/>
+        <result property="bo_editor" column="bo_editor"/>
+        <result property="bo_template" column="bo_template"/>
+        <result property="bo_responsible" column="bo_responsible"/>
+        <result property="bo_amount" column="bo_amount"/>
+        <result property="bo_expect_date" column="bo_expect_date"/>
+        <result property="bo_notes" column="bo_notes"/>
+        <result property="create_time" column="create_time"/>
+        <result property="update_time" column="update_time"/>
+    </resultMap>
+
+    <select id="queryBizOpportunity" resultMap="se_business_opportunityMap">
+        <bind name="key_offset" value="(currentPage-1)*pageCount"/>
+        select * from se_business_opportunity order by id asc
+        <if test="pageCount != null and currentPage != null">
+            limit #{key_offset},#{pageCount}
+        </if>
+    </select>
+
+    <select id="queryBizOppByKey" resultMap="se_business_opportunityMap">
+        select * from se_business_opportunity where bo_name like "%"#{bo_name}"%"
+    </select>
+
+    <select id="queryCount" resultType="Integer">
+        select count(id) from se_business_opportunity
+    </select>
+
+    <insert id="addBizOpp" parameterType="com.yuanlrc.entity.se_business_opportunity"
+            keyProperty="id" useGeneratedKeys="true">
+        insert into se_business_opportunity (id, customer_id, bo_name, bo_date, bo_status, bo_follow_status, bo_editor, bo_template, bo_responsible, bo_amount, bo_expect_date, bo_notes)
+        values(#{id}, #{customer_id}, #{bo_name}, #{bo_date}, #{bo_status}, #{bo_follow_status}, #{bo_editor}, #{bo_template}, #{bo_responsible}, #{bo_amount}, #{bo_expect_date}, #{bo_notes})
+    </insert>
+
+    <update id="editBizOpp" parameterType="com.yuanlrc.entity.se_business_opportunity">
+        update se_business_opportunity set customer_id = #{customer_id}, bo_name = #{bo_name}, bo_date = #{bo_date}, bo_status = #{bo_status}, bo_follow_status = #{bo_follow_status}, bo_editor = #{bo_editor}, bo_template = #{bo_template}, bo_responsible = #{bo_responsible}, bo_amount = #{bo_amount}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBizOpp">
+        delete from se_business_opportunity where id = #{id}
+    </delete>
+</mapper>
